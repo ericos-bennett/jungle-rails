@@ -2,13 +2,20 @@ class OrdersController < ApplicationController
 
   def show
     @order = Order.find(params[:id])
-  end
+    @enhanced_items = @order.line_items.map { |product| {
+      product: Product.find_by(id: product.product_id),
+      quantity: product.quantity,
+    } }
 
+  end
+  
   def create
     charge = perform_stripe_charge
     order  = create_order(charge)
-
+    
     if order.valid?
+      @purchased_items = enhanced_cart
+      puts @purchased_items.inspect
       empty_cart!
       redirect_to order, notice: 'Your Order has been placed.'
     else
