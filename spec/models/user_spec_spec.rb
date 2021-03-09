@@ -10,8 +10,8 @@ RSpec.describe User, type: :model do
         first_name: 'Lolo',
         last_name: 'Zva', 
         email: 'lolo@gmail.com', 
-        password: '1234', 
-        password_confirmation: '1234'
+        password: '12345', 
+        password_confirmation: '12345'
       )
     end
 
@@ -20,8 +20,8 @@ RSpec.describe User, type: :model do
         first_name: 'Fred',
         last_name: 'Manny',
         email: 'fred@gmail.com', 
-        password: '1234', 
-        password_confirmation: '12'
+        password: '12345', 
+        password_confirmation: '12346'
       )
       expect(@user.errors.full_messages).to include("Password confirmation doesn't match Password")
     end
@@ -32,8 +32,8 @@ RSpec.describe User, type: :model do
         first_name: '',
         last_name: 'Manny',
         email: 'fred@gmail.com', 
-        password: '1234', 
-        password_confirmation: '1234'
+        password: '12345', 
+        password_confirmation: '12345'
       )
       expect(@user.errors.full_messages).to include("First name can't be blank")
     end
@@ -43,8 +43,8 @@ RSpec.describe User, type: :model do
         first_name: 'Fred',
         last_name: '',
         email: 'fred@gmail.com', 
-        password: '1234', 
-        password_confirmation: '1234'
+        password: '12345', 
+        password_confirmation: '12345'
       )
       expect(@user.errors.full_messages).to include("Last name can't be blank")
     end
@@ -54,8 +54,8 @@ RSpec.describe User, type: :model do
         first_name: 'Fred',
         last_name: 'Manny',
         email: '', 
-        password: '1234', 
-        password_confirmation: '1234'
+        password: '12345', 
+        password_confirmation: '12345'
       )
       expect(@user.errors.full_messages).to include("Email can't be blank")
     end
@@ -65,17 +65,28 @@ RSpec.describe User, type: :model do
         first_name: 'Fred',
         last_name: 'Manny',
         email: 'freddie@gmail.com', 
-        password: '1234', 
-        password_confirmation: '1234'
+        password: '12345', 
+        password_confirmation: '12345'
       )
       @user2 = User.create(
         first_name: 'Fred',
         last_name: 'Manny',
         email: 'freddie@gmail.com', 
+        password: '12345', 
+        password_confirmation: '12345'
+      )
+      expect(@user2.errors.full_messages).to include("Email has already been taken")
+    end
+
+    it "will not save with a 4 digit password (too short)" do
+      @user = User.create(
+        first_name: 'Lolo',
+        last_name: 'Zva', 
+        email: 'lolo@gmail.com', 
         password: '1234', 
         password_confirmation: '1234'
       )
-      expect(@user2.errors.full_messages).to include("Email has already been taken")
+      expect(@user.errors.full_messages).to include("Password is too short (minimum is 5 characters)")
     end
 
   end
