@@ -8,4 +8,6 @@ class User < ActiveRecord::Base
   validates :password, presence: true
   validates :password_confirmation, presence: true
 
+  validates_uniqueness_of :email
+
 end
