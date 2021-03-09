@@ -14,7 +14,7 @@ class User < ActiveRecord::Base
   validates_uniqueness_of :email
 
   def self.authenticate_with_credentials(email, password)
-    user = User.find_by(email: email)
+    user = User.find_by(email: email.strip.downcase)
     user && user.authenticate(password)
   end
 

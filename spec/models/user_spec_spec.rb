@@ -89,5 +89,66 @@ RSpec.describe User, type: :model do
       expect(@user.errors.full_messages).to include("Password is too short (minimum is 5 characters)")
     end
 
+    # it "will trim an email's whitespace before saving" do
+    #   @user = User.create(
+    #     first_name: 'Lolo',
+    #     last_name: 'Zva', 
+    #     email: '  lolo@gmail.com  ', 
+    #     password: '12345', 
+    #     password_confirmation: '12345'
+    #   )
+    #   p @user
+    #   expect(@user[:email]).to eq('lolo@gmail.com')
+    # end
+
   end
+
+  describe '.authenticate_with_credentials' do
+
+    it "will return the user if authenticated with the correct password" do
+      @user = User.create!(
+        first_name: 'Lolo',
+        last_name: 'Zva', 
+        email: 'lolo@gmail.com', 
+        password: '12342', 
+        password_confirmation: '12342'
+      )
+      expect(User.authenticate_with_credentials(@user[:email], '12342')).to eq(@user)
+    end
+
+    it "will return false if authenticated with the incorrect data" do
+      @user = User.create!(
+        first_name: 'Lolo',
+        last_name: 'Zva', 
+        email: 'lolo@gmail.com', 
+        password: '12342', 
+        password_confirmation: '12342'
+      )
+      expect(User.authenticate_with_credentials(@user[:email], '12345')).to be false
+    end
+
+    it "will return the user if authenticated with the email with spacing" do
+      @user = User.create!(
+        first_name: 'Lolo',
+        last_name: 'Zva', 
+        email: 'lolo@gmail.com', 
+        password: '12342', 
+        password_confirmation: '12342'
+      )
+      expect(User.authenticate_with_credentials('  lolo@gmail.com  ', '12342')).to eq(@user)
+    end
+
+    it "will return the user if authenticated with a case insensitive email" do
+      @user = User.create!(
+        first_name: 'Lolo',
+        last_name: 'Zva', 
+        email: 'lolo@gmail.com', 
+        password: '12342', 
+        password_confirmation: '12342'
+      )
+      expect(User.authenticate_with_credentials('LOLO@gmail.com', '12342')).to eq(@user)
+    end
+
+  end
+
 end
